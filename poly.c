@@ -32,7 +32,7 @@ void printList ( TITEM * l ) {
 }
 
 void printPoly ( TITEM * l ) {
-    
+
 }
 
 TITEM * parseList ( const char * str ) {
@@ -46,18 +46,48 @@ TITEM * parseList ( const char * str ) {
 }
 
 TITEM * addPoly ( TITEM * a, TITEM * b ) {
-
+    TITEM * head = NULL, * curr = NULL;
+    int mul, pow;
+    while ( a && b ) {
+        if ( a -> pow == b -> pow ) {
+            mul = a -> mul + b -> mul;
+            pow = a -> pow;
+            a = a -> next;
+            b = b -> next;
+        }
+        else if ( a -> pow < b -> pow ) {   
+            mul = a -> mul;
+            pow = a -> pow;
+            a = a -> next;
+        }
+        else {
+            mul = b -> mul;
+            pow = b -> pow;
+            b = b -> next;
+        }
+        if ( !head )
+            curr = head = createNode ( mul, pow, NULL );
+        else {
+            curr -> next = createNode ( mul, pow, NULL );
+            curr = curr -> next;
+        }
+    }
+    return head;
 }
 
 int main ( void ) {
     
     TITEM * a = parseList ( "9^3 2^1 3^0" );
+    TITEM * b = parseList ( "-1^3 4^2 7^0" );
+    TITEM * c = addPoly ( a, b );
+    
     printList ( a );
-    deleteList ( a );
-
-    TITEM * b = parseList ( "8^3 4^2 2^1 10^0" );
     printList ( b );
+    printList ( c );
+    
+    deleteList ( a );
     deleteList ( b );
+    deleteList ( c );
 
     return 0;
 }
